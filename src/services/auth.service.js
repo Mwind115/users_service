@@ -16,7 +16,7 @@ export class AuthService {
     console.log(req.body)
     const existingUser = await UserModel.findOne({ userId })
 
-    if (!req.body.name || !userId || req.body.password){
+    if ( !userId || req.body.password){
       throw new Error('Thông tin không được để trống');
     }
 
