@@ -14,6 +14,13 @@ router.get('/users', verifyToken, AuthController.getUsers)
 // Xóa người dùng
 router.delete('/users/:userId', verifyToken, AuthController.deleteUser)
 
+// Quên mật khẩu
+router.post('/forgot-password', AuthController.forgotPassword)
+
+//Đổi mật khẩu
+router.put('/users/:userId/change-password', verifyToken, AuthController.changePassword)
+
+
 
 // router.get('/', AuthController.get)
 

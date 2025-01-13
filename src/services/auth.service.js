@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import UserModel from '../schemas/user.schema.js'
 import { JWT_EXPIRES_IN, JWT_SECRET } from '../utils/constant.js'
 import { request } from 'express'
+import crypto from 'crypto'
+
 
 export class AuthService {
   // static async get() {
@@ -83,6 +85,64 @@ export class AuthService {
       throw new Error(`User with userId ${userId} not found`)
     }
     return `User with userId ${userId} has been deleted`
+  }
+
+
+
+  static async changePassword(req) {
+    const { userId } = req.params; // Lấy userId từ URL params
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await UserModel.findOne({ userId })
+
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    // Check if the old password matches
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password)
+    if (!isValidPassword) {
+      throw new Error('Mật khẩu cũ không đúng')
+    }
+
+    // Validate the new password (you can add more complex rules here)
+    if (newPassword.length < 6) {
+      throw new Error('Mật khẩu mới phải có ít nhất 6 ký tự')
+    }
+
+    // Hash the new password and save it
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    user.password = hashedPassword
+    await user.save()
+
+    return `Password for user ${userId} has been successfully changed`
+  }
+
+  // Function to handle "Forgot Password" - Generate new password and notify Admin
+  static async forgotPassword(req) {
+    const { userId } = req.body
+    const user = await UserModel.findOne({ userId })
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    // Generate a random new password
+    const newPassword = crypto.randomBytes(6).toString('hex')  // 8 bytes = 16 characters
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    // Update user with the new password
+    user.password = hashedPassword
+    await user.save()
+
+    console.log("password: " + newPassword)
+
+    // Send notification to admin
+
+
+    return `Password for user ${userId} has been reset. The new password has been sent to the admin ${newPassword}.`
   }
 
   // async generateToken(payload) {

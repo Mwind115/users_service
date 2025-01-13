@@ -44,6 +44,25 @@ export default class AuthController {
     }
   }
 
+  static async changePassword(req, res) {
+    try {
+      const message = await AuthService.changePassword(req)
+      res.status(200).json({ message })
+    } catch (err) {
+      res.status(400).json({ message: err.message })
+    }
+  }
+
+  // Forgot Password
+  static async forgotPassword(req, res) {
+    try {
+      const message = await AuthService.forgotPassword(req)
+      res.status(200).json({ message })
+    } catch (err) {
+      res.status(400).json({ message: err.message })
+    }
+  }
+
     
 
   // static async register(req, res) {
