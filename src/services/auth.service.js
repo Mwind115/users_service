@@ -80,15 +80,18 @@ export class AuthService {
   
 
   // Xóa người dùng theo userId
-    static async deleteUser(userId) {
-    const user = await UserModel.findOneAndDelete({ userId: String(userId) })
-    console.log("Attempting to delete user with userId:", userId);
-    if (!user) {
-      throw new Error(`User with userId ${userId} not found`)
-      console.log(`No user found with userId ${userId}`); 
-    }
-    return `User with userId ${userId} has been deleted`
+static async deleteUser(userId) {
+  // Kiểm tra người dùng có tồn tại không
+  const user = await UserModel.findOne({ userId: String(userId) });
+  if (!user) {
+    throw new Error(`User with userId ${userId} not found`); // Nếu không tìm thấy, trả về lỗi
   }
+
+  // Nếu người dùng tồn tại, thực hiện xóa
+  await UserModel.findOneAndDelete({ userId: String(userId) });
+  return `User with userId ${userId} has been deleted`;
+}
+
   // static async deleteUser(userId) {
   //   const user = await UserModel.findOneAndDelete({ userId })
   //   if (!user) {
