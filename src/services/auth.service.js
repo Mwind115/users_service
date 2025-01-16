@@ -51,7 +51,8 @@ export class AuthService {
     const payload = {
       userId: user.userId,
       role: user.role,
-      name: user.name
+      name: user.name,
+      date: user.date
     }
 
     console.log("login access")
