@@ -12,7 +12,7 @@ router.post('/register', AuthController.register)
 router.get('/users', verifyToken, AuthController.getUsers)
 
 // Xóa người dùng
-router.delete('/users/:userId', verifyToken, AuthController.deleteUser)
+router.delete('/users/:userId', AuthController.deleteUser)
 
 // Quên mật khẩu
 router.post('/forgot-password', AuthController.forgotPassword)
