@@ -80,13 +80,22 @@ export class AuthService {
   
 
   // Xóa người dùng theo userId
-  static async deleteUser(userId) {
-    const user = await UserModel.findOneAndDelete({ userId })
+    static async deleteUser(userId) {
+    const user = await UserModel.findOneAndDelete({ userId: String(userId) })
+    console.log("Attempting to delete user with userId:", userId);
     if (!user) {
       throw new Error(`User with userId ${userId} not found`)
+      console.log(`No user found with userId ${userId}`); 
     }
     return `User with userId ${userId} has been deleted`
   }
+  // static async deleteUser(userId) {
+  //   const user = await UserModel.findOneAndDelete({ userId })
+  //   if (!user) {
+  //     throw new Error(`User with userId ${userId} not found`)
+  //   }
+  //   return `User with userId ${userId} has been deleted`
+  // }
 
 
 
